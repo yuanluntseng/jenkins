@@ -1,0 +1,16 @@
+com\daniel\filters\RBACAuthInterceptor.class
+com\daniel\AppConfig.class
+com\daniel\JwtUtil.class
+com\daniel\controller\TestController.class
+com\daniel\dos\User.class
+com\daniel\services\UserService.class
+com\daniel\repos\CustomsImpl.class
+com\daniel\dos\Permission.class
+com\daniel\repos\PermissionRepo.class
+com\daniel\controller\ResourceController.class
+com\daniel\repos\UserRepo.class
+com\daniel\dos\Policy.class
+com\daniel\filters\OnceFilter.class
+com\daniel\controller\MyRestController.class
+com\daniel\repos\Customs.class
+com\daniel\DemoApplication.class

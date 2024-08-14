@@ -1,25 +1,50 @@
 pipeline {
     agent any
-    parameters {
-        string(name: 'PORT', defaultValue: '5000', description: 'Forwarded Port')
+
+    environment {
+        DOCKER_IMAGE = 'my-springboot-app'
+        DOCKER_TAG = 'latest'
     }
+
     stages {
-        stage('Pull') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/shekhargulati/python-flask-docker-hello-world.git'
+                git branch: 'main', url: 'https://github.com/your/repo.git'
             }
         }
-        stage('Docker Run') {
+
+        stage('Build') {
             steps {
-                sh '''docker rm -f flask-app
-                docker build -t simple-flask-app:latest .
-                docker run --name flask-app -d -p $PORT:5000 simple-flask-app'''
+                script {
+                    docker.build(DOCKER_IMAGE, '-f Dockerfile .')
+                }
             }
         }
-        stage('Smoke Test') {
+
+        stage('Test') {
             steps {
-                sh 'curl localhost:$PORT'
+                script {
+                    docker.image(DOCKER_IMAGE).inside {
+                        sh 'mvn test'
+                    }
+                }
             }
+        }
+
+        
+
+        stage('Deploy') {
+            steps {
+                script {
+                    docker-compose -f docker-compose.yml up -d
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }

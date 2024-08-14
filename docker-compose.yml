@@ -1,0 +1,98 @@
+version: '3.8'
+services:
+  springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    depends_on:
+      - mysql-db
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - spring-cloud-network
+
+  jpa:
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    expose:
+      - "8080"
+    depends_on:
+      - mysql-db
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - spring-cloud-network
+
+  springboot2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    depends_on:
+      - mysql-db
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - spring-cloud-network
+      
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - springboot
+      - springboot2
+      - jpa
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - spring-cloud-network
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: rbac
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - spring-cloud-network
+
+volumes:
+  mysql_data:
+
+networks:
+  spring-cloud-network:
+    driver: bridge

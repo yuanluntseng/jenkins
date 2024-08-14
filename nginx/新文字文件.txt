@@ -1,0 +1,2 @@
+Certificate request self-signature ok
+subject=C = TW, ST = KA, L = ZO, O = Friendly, OU = company, CN = Daniel, emailAddress = yuanluntseng@gmail.com
