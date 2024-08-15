@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat 'build.bat' // Executes build.bat
+                bat 'build.sh' // Executes build.bat
             }
         }
     }
