@@ -1,10 +1,13 @@
 pipeline {
-    agent any // or specify a label for a specific agent
+    agent any // or specify a label for an agent with Docker installed
 
     stages {
-        stage('Build') {
+        stage('Build and Deploy with Docker Compose') {
             steps {
-                bat 'build.sh' // Executes build.bat
+                script {
+                    // Run the docker-compose command
+                    sh 'docker-compose up --build -d'
+                }
             }
         }
     }
